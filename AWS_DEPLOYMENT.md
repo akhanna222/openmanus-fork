@@ -173,12 +173,16 @@ If not, the deployment script will attempt to install it automatically.
 
 ### Playwright Browser Issues
 
-If Playwright browsers fail to install:
+If Playwright browsers fail to install or you see validation errors:
 
 ```bash
 source venv/bin/activate
+
+# Install system dependencies (requires sudo)
+sudo playwright install-deps chromium
+
+# Install browser
 playwright install chromium
-playwright install-deps
 ```
 
 ### Configuration Errors

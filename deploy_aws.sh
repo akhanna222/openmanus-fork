@@ -125,8 +125,12 @@ install_dependencies() {
     # Install requirements
     pip install -r requirements.txt
 
+    # Install Playwright system dependencies (requires sudo)
+    log_info "Installing Playwright system dependencies (this may take a few minutes)..."
+    sudo playwright install-deps chromium || log_warn "Playwright system dependencies installation failed. You may need to run: sudo playwright install-deps"
+
     # Install Playwright browsers (optional but recommended)
-    log_info "Installing Playwright browsers (this may take a few minutes)..."
+    log_info "Installing Playwright browsers..."
     playwright install chromium || log_warn "Playwright browser installation failed. You may need to install manually."
 
     log_info "Dependencies installation completed"
