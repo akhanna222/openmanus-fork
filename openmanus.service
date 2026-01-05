@@ -1,0 +1,42 @@
+[Unit]
+Description=OpenManus AI Agent
+Documentation=https://github.com/FoundationAgents/OpenManus
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/OpenManus
+Environment="PATH=/home/ubuntu/OpenManus/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# ExecStartPre to ensure ports are free
+ExecStartPre=/bin/bash -c 'for port in 3000 5000 8000 8080 8888 9000; do lsof -ti:$port | xargs -r kill -9 2>/dev/null || true; done'
+
+# Main command - adjust based on which version you want to run
+# Standard version:
+ExecStart=/home/ubuntu/OpenManus/venv/bin/python /home/ubuntu/OpenManus/main.py
+
+# For MCP version, use:
+# ExecStart=/home/ubuntu/OpenManus/venv/bin/python /home/ubuntu/OpenManus/run_mcp.py
+
+# For Flow version, use:
+# ExecStart=/home/ubuntu/OpenManus/venv/bin/python /home/ubuntu/OpenManus/run_flow.py
+
+# Restart configuration
+Restart=on-failure
+RestartSec=10
+KillMode=mixed
+TimeoutStopSec=30
+
+# Logging
+StandardOutput=append:/var/log/openmanus/output.log
+StandardError=append:/var/log/openmanus/error.log
+SyslogIdentifier=openmanus
+
+# Resource limits (adjust based on your instance size)
+LimitNOFILE=65536
+MemoryLimit=2G
+
+[Install]
+WantedBy=multi-user.target
